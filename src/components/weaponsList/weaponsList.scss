@@ -1,0 +1,33 @@
+@import '../../style/variables.scss';
+
+.weapons-list {
+    &__wrapper {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    &__weapon {
+        margin-bottom: 15px;
+        width: 150px;
+        img {
+            width: 100%;
+        }
+        p {
+            font-size: 14px;
+        }
+    }
+    &__filter {
+        margin-bottom: 15px;
+        &-btn {
+            padding: 5px 10px;
+            height: 25px;
+            color: #fff;
+            background-color: $second-color;
+            border: none;
+            &--active {
+                background-color: $additional-color;
+                color: black;
+            }
+        }
+    }
+}

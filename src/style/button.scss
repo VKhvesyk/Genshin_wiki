@@ -1,0 +1,23 @@
+@import './variables';
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 10px;
+    min-width: 110px;
+    min-height: 25px;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 14px;
+    border: none;
+    background-color: $second-color;
+    transition: 0.3s all;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+        transform: translateY(-5px);
+    }
+}
