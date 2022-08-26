@@ -2,25 +2,45 @@
 
 .weapons-list {
     &__wrapper {
+        // display: flex;
+        // justify-content: space-between;
+        // flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(4, 180px);
+        grid-column-gap: 25px;
+        column-gap: 15px;
+        grid-row-gap: 20px;
+        row-gap: 30px;
+    }
+    &__card {
         display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 10px;
+        width: 180px;
+        height: 210px;
+        max-height: 250px;
+        background-color: $second-color;
+        color: white;
+        border-radius: 15px;
+        box-shadow: 8px 10px 20px rgba(0, 0, 0, 0.35);
     }
     &__weapon {
-        margin-bottom: 15px;
         width: 150px;
         img {
+            margin-bottom: 5px;
             width: 100%;
         }
-        p {
-            font-size: 14px;
+        a {
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
         }
     }
     &__filter {
         margin-bottom: 15px;
         &-btn {
             padding: 5px 10px;
-            height: 25px;
             color: #fff;
             background-color: $second-color;
             border: none;

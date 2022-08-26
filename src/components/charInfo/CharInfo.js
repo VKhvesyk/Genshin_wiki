@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 
 import useGenshinService from '../../services/GenshinService';
 import Skeleton from '../skeleton/Skeleton';
+import Spinner from '../spinner/Spinner';
 
 import './charInfo.scss';
 
 
 const CharInfo = (props) => {
 
-    const [char, setChar] = useState([]);
+    const [char, setChar] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const {getCharacter} = useGenshinService();
 
@@ -22,12 +24,14 @@ const CharInfo = (props) => {
 
 
     const updateChar = () => {
+
         const {selectedChar} = props;
 
         if (!selectedChar) {
             return;
         }
 
+        setLoading(true);
 
         getCharacter(selectedChar)
             .then(onCharLoaded);
@@ -35,22 +39,28 @@ const CharInfo = (props) => {
 
     const onCharLoaded = (char) => {
         setChar(char);
+
+        setLoading(false);
     }
 
     const skeleton = char ? null : <Skeleton/>
+    const spinner = loading ? <Spinner/> : null
     const content = char ? <View char={char}/> : null;
 
 
     return (
         <div className="char__info">
             {skeleton}
+            {spinner}
             {content}
         </div>
     )
 }
 
 const View = ({char}) => {
-    const {icon, name, element, weapon, birthday, description, nation} = char;
+    const {icon, name, element, weapon, birthday, description, nation} = char[0];
+
+    console.log(`Char in view: ${char[0].name}`)
 
     return (
         <>

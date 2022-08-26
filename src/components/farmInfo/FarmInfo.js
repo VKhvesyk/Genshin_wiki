@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react';
 
 import useGenshinService from '../../services/GenshinService';
 
+import { Carousel } from 'react-bootstrap';
+
 import './farmInfo.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Farminfo = () => {
 
     const [talentList, setTalentList] = useState([]);
-    const {getMaterialsCurrentDay} = useGenshinService();
+    const [eventsList, setEventsList] = useState([]);
+    const {getMaterialsCurrentDay, getCurrentEvents} = useGenshinService();
 
     useEffect(() => {
         onRequest()
@@ -16,12 +20,21 @@ const Farminfo = () => {
     const onRequest = () => {
         getMaterialsCurrentDay(currentDay())
             .then(onCharListLoaded);
+
+        getCurrentEvents()
+            .then(onEventsListLoaded);
     }
 
 
     const onCharListLoaded = (newCharList) => {
 
         setTalentList(talentList => [...talentList, ...newCharList]);
+
+    }
+
+    const onEventsListLoaded = (newEventsList) => {
+
+        setEventsList(eventsList => [...eventsList, newEventsList]);
 
     }
 
@@ -42,13 +55,13 @@ const Farminfo = () => {
     }
 
 
-    function renderItems(arr) {
+    function renderTalentMaterials(arr) {
 
         const items = arr ? arr.map((item, i) => {
             
             return (
                 <>
-                <div className="farm-info__talent-books">
+                <div className="farm-info__talent-book">
                         <img 
                             src={item.talentBookIcon} 
                             alt={item.talentBookName} 
@@ -61,31 +74,54 @@ const Farminfo = () => {
 
 
         return (
-            <div className="farm-info__info">
             
                 <div className="farm-info__wrapper">
                     {items}
                 </div>
+        )
+    }
+
+
+    function renderEvents(arr) {
+
+        const items = arr ? arr.map((item, i) => {
+            const {imageUrl, name, durationStart, durationEnd} = item[1];
+            
+            return (
+                <Carousel.Item>
+                    <div className="farm-info__event" style={{'background-image': `url(${imageUrl})`, 'backgroundSize': 'cover', 'backgroundRepeat': 'no-repeat'}}>
+                        <p className="farm-info__title">
+                            {name}
+                        </p>
+                        <p className="farm-info__subtitle">
+                            Duration: {durationStart} - {durationEnd}
+                        </p>
+                    </div>
+                </Carousel.Item>
+            )
+        }) : null
+
+
+        return (
+            <div className="farm-info__events">
+                <Carousel interval="50000" indicators='false'>
+                    {items}
+                </Carousel>
             </div>
         )
     }
 
-    const items = renderItems(talentList);
+
+    const talentMaterials = renderTalentMaterials(talentList);
+    const events = renderEvents(eventsList[0]);
 
     return (
         <div className="farm-info">
             <div className="farm-info__materials">
                 <p className="farm-info__title">Next talent books available for the farming today</p>
-                {items}
+                {talentMaterials}
             </div>
-            <div className="farm-info__static" style={{'background-image': 'url(https://uploadstatic-sea.mihoyo.com/contentweb/20210512/2021051222525282025.png)', 'backgroundSize': 'contain'}}>
-                <p className="farm-info__title">
-                    Windtrace, the classic game that hands down Mondstadt's...
-                </p>
-                <p className="farm-info__subtitle">
-                    Duration: 2021/05/24 - 2021/05/24
-                </p>
-            </div>
+            {events}
         </div>
     )
 }

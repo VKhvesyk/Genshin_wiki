@@ -29,20 +29,17 @@
         height: 180px;
         object-fit: cover;
     }
-    &__info {
-        display: grid;
-        row-gap: 10px;
+    &__wrapper {
         margin: 10px 0px;
-        position: relative;
-        z-index: 2;
     }
     &__talent-image {
         margin-right: 15px;
         height: 80px;
     }
-    &__talent-books {
+    &__talent-book {
         display: flex;
         align-items: center;
+        position: relative;
     }
     &__charecter-image {
         margin-right: 10px;
@@ -77,13 +74,24 @@
             margin-right: 30px;
         }
     }
-    &__static {
+    &__event {
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: 47px 145px 35px;
+        p {
+            &:last-child {
+                grid-row: 3/4;
+            }
+        }
+    }
+    &__events {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         background-color: $second-color;
         position: relative;
         box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
         button {
             margin-top: 13px;
         }
@@ -97,7 +105,7 @@
         backdrop-filter: blur(5.9px);
     }
     &__subtitle {
-        padding: 0px 10px;
+        padding: 5px 10px;
         font-size: 18px;
         line-height: 32px;
         letter-spacing: -0.045em;

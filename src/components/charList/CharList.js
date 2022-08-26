@@ -51,8 +51,7 @@ const CharList = (props) => {
 
     function renderItems(arr, count) {
 
-        let items =  arr ? arr.map((item, i) => {
-
+        let items =  arr.map((item, i) => {
             if (i < count) {
                 return (
                     <li className="char__item"
@@ -69,8 +68,9 @@ const CharList = (props) => {
                         </div>
                     </li>
                 )
-            }
-        }) : null
+            };
+
+        });
 
         return (
             <ul className="char__grid">

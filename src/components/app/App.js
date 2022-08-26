@@ -15,9 +15,9 @@ const App = () => {
             <main>
                 <FarmInfo/>
                 <div className="char__content">
-                    {/* <WeaponsList/> */}
+                    <WeaponsList/>
                     {/* <SingleChar/> */}
-                    <MainPage/>
+                    {/* <MainPage/> */}
                 </div>
                 <img className="bg-decoration" src={decoration} alt="Venti"/>
             </main>
