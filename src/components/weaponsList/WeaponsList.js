@@ -9,7 +9,15 @@ const WeaponsList = () => {
     const [weaponsList, setWeaponsList] = useState([]);
     const [weaponsListEnded, setWeaponsListEnded] = useState(false);
     const [count, setCount] = useState(0);
-    const [filter, setFilter] = useState(null);
+    const [filter, setFilter] = useState('sword');
+    const buttonsData = [
+        {data: 'all', label: 'All'},
+        {data: 'sword', label: 'Sword'},
+        {data: 'bow', label: 'Bow'},
+        {data: 'claymore', label: 'Claymore'},
+        {data: 'polearm', label: 'Polearm'},
+        {data: 'catalyst', label: 'Catalyst'}
+    ];
 
     const {getAllWeapons} = useGenshinService();
 
@@ -28,9 +36,6 @@ const WeaponsList = () => {
         setWeaponsListEnded(true);
 
         setCount(count => count + 6);
-
-        console.log(filterList(weaponsList, 'bow'))
-        
     }
 
     const onWeaponsListLoaded = (newWeaponsList) => {
@@ -39,10 +44,19 @@ const WeaponsList = () => {
         onRequest();
     }
 
+    const selectFilter = (event) => {
+        event.preventDefault();
+        const data = event.target.attributes.data.nodeValue;
+        
+        setFilter(data);
+    }
+
 
     function filterList(arr, filter) {
 
         switch (filter) {
+            case 'all':
+                return arr.filter(item => item.isReleased === true);
             case 'sword':
                 return arr.filter(item => item.weaponType === 'Sword' && item.isReleased === true);
             case 'catalyst':
@@ -54,7 +68,7 @@ const WeaponsList = () => {
             case 'polearm':
                 return arr.filter(item => item.weaponType === 'Polearm' && item.isReleased === true);
             default:
-                return arr;
+                return arr.filter(item => item.isReleased === true);
         }
     }
 
@@ -63,14 +77,22 @@ const WeaponsList = () => {
 
             items = filterList(arr, filter).map((item, i) => {
                 return (
-                    <div className="weapons-list__card">
+                    <div className="weapons-list__card" key={item.id}>
                         <div className="weapons-list__weapon">
-                            <img src={item.icon} alt={item.name} />
-                            <a href={item.id}>{item.name}</a>
+                            <img 
+                                    src={item.icon} 
+                                    alt={item.name}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src="https://media.istockphoto.com/vectors/cat-sits-in-a-box-with-a-404-sign-page-or-file-not-found-connection-vector-id1278808623?k=20&m=1278808623&s=612x612&w=0&h=tmzYgVK5yF-dtVvW81zz-Ebpeqd6EvD38KYGRjczuiw="
+                                      }} 
+                                      />
+                            <p>{item.name}</p>
                         </div>
                     </div>
                 )
             })
+
 
         return (
             <div className="weapons-list__wrapper">
@@ -79,28 +101,30 @@ const WeaponsList = () => {
         )
     }
 
-    const items = renderWeaponsList(weaponsList, 'sword');
-    // console.log(filterList(weaponsList, 'bow'))
+    const items = renderWeaponsList(weaponsList, filter);
 
-
-
-
-
-
+    const buttons = buttonsData.map(({data, label}) => {
+        const active = filter === data;
+        const clazz = active ? 'weapons-list__filter-btn weapons-list__filter-btn--active' : 'weapons-list__filter-btn';
+        return (
+            <>
+            <button data={data} className={clazz}>{label}</button>
+            </>
+        )
+    })
 
     return (
-        <div className="weapons-list">
-            <div className="weapons-list__filter">
-                <button className="weapons-list__filter-btn weapons-list__filter-btn--active">Sword</button>
-                <button className="weapons-list__filter-btn">Bow</button>
-                <button className="weapons-list__filter-btn">Claymore</button>
-                <button className="weapons-list__filter-btn">Polearm</button>
-                <button className="weapons-list__filter-btn">Catalyst</button>
+        <div className="char__content char__content--weapons">
+            <p className="weapons-list__title">Catalog of weapons</p>
+            <div className="weapons-list__filter" onClick={selectFilter}>
+                {buttons}
             </div>
-            {items}
-            <button className="button button__main button__long">
-                <div className="inner">load more</div>
-            </button>
+            <div className="weapons-list">
+                {items}
+                <button className="button button__main button__long">
+                    <div className="inner">load more</div>
+                </button>
+            </div>
         </div>
     )
 }

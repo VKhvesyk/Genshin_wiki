@@ -103,6 +103,9 @@
         color: #4b3522;
         background: rgba(255, 255, 255, 0.534);
         backdrop-filter: blur(5.9px);
+        &--sunday {
+            margin: 10% 0%;
+        }
     }
     &__subtitle {
         padding: 5px 10px;

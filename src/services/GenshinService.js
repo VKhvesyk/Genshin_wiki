@@ -20,6 +20,11 @@ const useGenshinService = () => {
         return res.payload.weapons.map(_transformWeapons)
     }
 
+    const getAllEnemies = async () => {
+        const res = await getResource('https://genshin-app-api.herokuapp.com/api/enemies');
+        return res.payload.enemies.map(_transformEnemies)
+    }
+
     const getCharacter = async (name) => {
         const res = await getResource(`https://genshin-app-api.herokuapp.com/api/characters/info/${name}?infoDataSize=minimal`);
         return Object.entries(res.payload).map(_transformCharacter)
@@ -56,13 +61,23 @@ const useGenshinService = () => {
 
     const _transformWeapons = (weapon) => {
         return {
-            id: weapon.id,
+            id: weapon._id,
             name: weapon.name,
             baseAtk: weapon.baseAtk,
             rarity: weapon.rarity,
             weaponType: weapon.weaponType,
             icon: weapon.iconUrl,
             isReleased: weapon.isReleased
+        }
+    } 
+
+    const _transformEnemies = (enemy) => {
+        return {
+            id: enemy._id,
+            name: enemy.name,
+            family: enemy.family,
+            description: enemy.description ? `${enemy.description.slice(0, 210)}...` : "Sorry, but now we haven't information about this character.",
+            icon: enemy.iconUrl
         }
     } 
 
@@ -81,13 +96,14 @@ const useGenshinService = () => {
 
     const _transformMaterialCurrentDay = item => {
         return {
+            id: item._id,
             talentBookIcon: item.iconUrl,
             talentBookName: item.name,
             farmingDays: item.farmingDays
         }
     }
     
-    return {getAllCharacters, getMaterialsCurrentDay, getCharacter, getCurrentEvents, getAllWeapons}
+    return {getAllCharacters, getMaterialsCurrentDay, getCharacter, getCurrentEvents, getAllWeapons, getAllEnemies}
 }
 
 export default useGenshinService;

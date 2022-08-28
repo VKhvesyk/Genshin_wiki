@@ -54,23 +54,30 @@ const Farminfo = () => {
           return days[day]
     }
 
-
     function renderTalentMaterials(arr) {
+        let items = null;
 
-        const items = arr ? arr.map((item, i) => {
-            
-            return (
-                <>
-                <div className="farm-info__talent-book">
-                        <img 
+        if (currentDay() !== 'Sunday') {
+            items = arr ? arr.map((item, i) => {
+                return (
+                    <>
+                        <div key={item.id} className="farm-info__talent-book">
+                            <img 
                             src={item.talentBookIcon} 
                             alt={item.talentBookName} 
                             className="farm-info__talent-image"/>
-                        <p className="farm-info__title">{`${item.farmingDays[0]}, ${item.farmingDays[1]}, ${item.farmingDays[2]}`}</p>
-                    </div>
+                            <p className="farm-info__title">{`${item.farmingDays[0]}, ${item.farmingDays[1]}, ${item.farmingDays[2]}`}</p>
+                        </div>
+                    </>
+                )
+            }) : null
+        } else {
+            items = (
+                <>
+                    <p className="farm-info__title farm-info__title--sunday">All materials available today</p>
                 </>
             )
-        }) : null
+        }
 
 
         return (
@@ -85,11 +92,11 @@ const Farminfo = () => {
     function renderEvents(arr) {
 
         const items = arr ? arr.map((item, i) => {
-            const {imageUrl, name, durationStart, durationEnd} = item[1];
+            const {imageUrl, name, durationStart, durationEnd, _id} = item[1];
             
             return (
-                <Carousel.Item>
-                    <div className="farm-info__event" style={{'background-image': `url(${imageUrl})`, 'backgroundSize': 'cover', 'backgroundRepeat': 'no-repeat'}}>
+                <Carousel.Item key={_id}>
+                    <div className="farm-info__event" style={{'backgroundImage': `url(${imageUrl})`, 'backgroundSize': 'cover', 'backgroundRepeat': 'no-repeat'}}>
                         <p className="farm-info__title">
                             {name}
                         </p>

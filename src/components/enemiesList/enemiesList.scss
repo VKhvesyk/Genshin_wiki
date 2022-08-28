@@ -1,6 +1,6 @@
 @import '../../style/variables.scss';
 
-.weapons-list {
+.enemies-list {
     padding: 0px 15px;
     justify-content: center;
     &__title {
@@ -29,7 +29,7 @@
         border-radius: 15px;
         box-shadow: 8px 10px 20px rgba(0, 0, 0, 0.35);
     }
-    &__weapon {
+    &__enemy {
         width: 150px;
         img {
             margin-bottom: 5px;
