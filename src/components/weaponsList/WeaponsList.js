@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import useGenshinService from '../../services/GenshinService';
+import Spinner from '../spinner/Spinner';
 
 import './weaponsList.scss';
 
@@ -19,27 +22,27 @@ const WeaponsList = () => {
         {data: 'catalyst', label: 'Catalyst'}
     ];
 
-    const {getAllWeapons} = useGenshinService();
+    const {getAllWeapons, loading} = useGenshinService();
 
     useEffect(() => {
         getAllWeapons()
             .then(onWeaponsListLoaded)
-    }, [])
+    }, [filter])
     
     const onRequest = () => {
         let ended = false;
 
-        if (weaponsList.length < count) {
+        if (filterList(weaponsList, filter).length < count) {
             ended = true;
         }
 
-        setWeaponsListEnded(true);
+        setWeaponsListEnded(ended);
 
-        setCount(count => count + 6);
+        setCount(count => count + 8);
     }
 
     const onWeaponsListLoaded = (newWeaponsList) => {
-        setWeaponsList([...weaponsList, ...newWeaponsList]);
+        setWeaponsList([...newWeaponsList]);
 
         onRequest();
     }
@@ -49,6 +52,7 @@ const WeaponsList = () => {
         const data = event.target.attributes.data.nodeValue;
         
         setFilter(data);
+        setCount(0);
     }
 
 
@@ -72,36 +76,43 @@ const WeaponsList = () => {
         }
     }
 
-    function renderWeaponsList(arr, filter) {
+    function renderWeaponsList(arr, filter, count) {
         let items = null;
 
             items = filterList(arr, filter).map((item, i) => {
-                return (
-                    <div className="weapons-list__card" key={item.id}>
-                        <div className="weapons-list__weapon">
-                            <img 
-                                    src={item.icon} 
-                                    alt={item.name}
-                                    onError={({ currentTarget }) => {
-                                        currentTarget.onerror = null;
-                                        currentTarget.src="https://media.istockphoto.com/vectors/cat-sits-in-a-box-with-a-404-sign-page-or-file-not-found-connection-vector-id1278808623?k=20&m=1278808623&s=612x612&w=0&h=tmzYgVK5yF-dtVvW81zz-Ebpeqd6EvD38KYGRjczuiw="
-                                      }} 
-                                      />
-                            <p>{item.name}</p>
-                        </div>
-                    </div>
-                )
+                if (i < count) {
+                    return (
+                        <CSSTransition 
+                            key={item.id} 
+                            timeout={500}
+                            classNames="animation">
+                                <div className="weapons-list__card" key={item.id}>
+                                    <div className="weapons-list__weapon">
+                                        <img 
+                                                src={item.icon} 
+                                                alt={item.name}
+                                                onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null;
+                                                    currentTarget.src="https://media.istockphoto.com/vectors/cat-sits-in-a-box-with-a-404-sign-page-or-file-not-found-connection-vector-id1278808623?k=20&m=1278808623&s=612x612&w=0&h=tmzYgVK5yF-dtVvW81zz-Ebpeqd6EvD38KYGRjczuiw="
+                                                }} 
+                                                />
+                                        <p>{item.name}</p>
+                                    </div>
+                                </div>
+                        </CSSTransition>
+                    )
+                }
             })
 
 
         return (
-            <div className="weapons-list__wrapper">
+            <TransitionGroup component={null}>
                     {items}
-            </div>
+            </TransitionGroup>
         )
     }
 
-    const items = renderWeaponsList(weaponsList, filter);
+    const items = renderWeaponsList(weaponsList, filter, count);
 
     const buttons = buttonsData.map(({data, label}) => {
         const active = filter === data;
@@ -113,6 +124,8 @@ const WeaponsList = () => {
         )
     })
 
+    const spinner = loading ? <Spinner/> : null;
+
     return (
         <div className="char__content char__content--weapons">
             <p className="weapons-list__title">Catalog of weapons</p>
@@ -120,9 +133,15 @@ const WeaponsList = () => {
                 {buttons}
             </div>
             <div className="weapons-list">
-                {items}
-                <button className="button button__main button__long">
-                    <div className="inner">load more</div>
+                <div className="weapons-list__wrapper">
+                    {spinner}
+                    {items}
+                </div>
+                <button 
+                    className="button button__main button__long"
+                    onClick={onRequest}
+                    style={{'display': weaponsListEnded ? 'none' : 'block'}}>
+                    load more
                 </button>
             </div>
         </div>

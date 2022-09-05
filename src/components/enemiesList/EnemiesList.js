@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import useGenshinService from '../../services/GenshinService';
 
 import './enemiesList.scss';
@@ -29,22 +31,22 @@ const EnemiesList = () => {
     useEffect(() => {
         getAllEnemies()
             .then(onEnemiesListLoaded)
-    }, [])
+    }, [filter])
     
     const onRequest = () => {
         let ended = false;
 
-        if (enemiesList.length < count) {
+        if (filterList(enemiesList, filter).length < count) {
             ended = true;
         }
 
-        setEnemiesListEnded(true);
+        setEnemiesListEnded(ended);
 
-        setCount(count => count + 6);
+        setCount(count => count + 8);
     }
 
     const onEnemiesListLoaded = (newEnemiesList) => {
-        setEnemiesList([...enemiesList, ...newEnemiesList]);
+        setEnemiesList([...newEnemiesList]);
 
         onRequest();
     }
@@ -54,6 +56,7 @@ const EnemiesList = () => {
         const data = event.target.attributes.data.nodeValue;
         
         setFilter(data);
+        setCount(0);
     }
 
 
@@ -95,29 +98,36 @@ const EnemiesList = () => {
         let items = null;
 
             items = filterList(arr, filter).map((item, i) => {
-                return (
-                    <div className="enemies-list__card" key={item.id}>
-                        <div className="enemies-list__enemy">
-                            {/* <div className="weapons-list__inner"> */}
-                                <img 
-                                    src={item.icon} 
-                                    alt={item.name}
-                                    onError={({ currentTarget }) => {
-                                        currentTarget.onerror = null;
-                                        currentTarget.src="https://media.istockphoto.com/vectors/cat-sits-in-a-box-with-a-404-sign-page-or-file-not-found-connection-vector-id1278808623?k=20&m=1278808623&s=612x612&w=0&h=tmzYgVK5yF-dtVvW81zz-Ebpeqd6EvD38KYGRjczuiw="
-                                      }} 
-                                      />
-                                <p>{item.name}</p>
-                            {/* </div> */}
-                        </div>
-                    </div>
-                )
+                if (i < count) {
+                    return (
+                        <CSSTransition 
+                            key={item.id} 
+                            timeout={500}
+                            classNames="animation">
+                            <div className="enemies-list__card" key={item.id}>
+                                <div className="enemies-list__enemy">
+                                    {/* <div className="weapons-list__inner"> */}
+                                        <img 
+                                            src={item.icon} 
+                                            alt={item.name}
+                                            onError={({ currentTarget }) => {
+                                                currentTarget.onerror = null;
+                                                currentTarget.src="https://media.istockphoto.com/vectors/cat-sits-in-a-box-with-a-404-sign-page-or-file-not-found-connection-vector-id1278808623?k=20&m=1278808623&s=612x612&w=0&h=tmzYgVK5yF-dtVvW81zz-Ebpeqd6EvD38KYGRjczuiw="
+                                            }} 
+                                            />
+                                        <p>{item.name}</p>
+                                    {/* </div> */}
+                                </div>
+                            </div>
+                        </CSSTransition>
+                    )
+                }
             })
 
         return (
-            <div className="enemies-list__wrapper">
+            <TransitionGroup component={null}>
                     {items}
-            </div>
+            </TransitionGroup>
         )
     }
 
@@ -140,9 +150,14 @@ const EnemiesList = () => {
                 {buttons}
             </div>
             <div className="enemies-list">
-                {items}
-                <button className="button button__main button__long">
-                    <div className="inner">load more</div>
+                <div className="enemies-list__wrapper">
+                    {items}
+                </div>
+                <button 
+                    className="button button__main button__long"
+                    onClick={onRequest}
+                    style={{'display': enemiesListEnded ? 'none' : 'block'}}>
+                    load more
                 </button>
             </div>
         </div>

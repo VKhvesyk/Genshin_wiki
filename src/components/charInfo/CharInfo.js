@@ -10,9 +10,8 @@ import './charInfo.scss';
 const CharInfo = (props) => {
 
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(false);
 
-    const {getCharacter} = useGenshinService();
+    const {getCharacter, loading, error} = useGenshinService();
 
     useEffect(() => {
         updateChar();
@@ -31,22 +30,17 @@ const CharInfo = (props) => {
             return;
         }
 
-        setLoading(true);
-
         getCharacter(selectedChar)
             .then(onCharLoaded);
     }
 
     const onCharLoaded = (char) => {
         setChar(char);
-
-        setLoading(false);
     }
 
     const skeleton = char ? null : <Skeleton/>
     const spinner = loading ? <Spinner/> : null
-    const content = char ? <View char={char}/> : null;
-
+    const content = !(loading || !char) ? <View char={char}/> : null;
 
     return (
         <div className="char__info">
@@ -60,7 +54,27 @@ const CharInfo = (props) => {
 const View = ({char}) => {
     const {icon, name, element, weapon, birthday, description, nation} = char[0];
 
-    console.log(`Char in view: ${char[0].name}`)
+    function classForVisonText(filter) {
+
+        switch (filter) {
+            case 'Pyro':
+                return 'single-char__info-vision--pyro'
+            case 'Hydro':
+                return 'single-char__info-vision--hydro'
+            case 'Electro':
+                return 'single-char__info-vision--electro'
+            case 'Cryo':
+                return 'single-char__info-vision--cryo'
+            case 'Anemo':
+                return 'single-char__info-vision--anemo'
+            case 'Geo':
+                return 'single-char__info-vision--geo'
+            default:
+                return 'single-char__info-vision--black';
+        }
+    }
+
+    const clazz = classForVisonText(element);
 
     return (
         <>
@@ -68,8 +82,8 @@ const View = ({char}) => {
                 <img className='char__info-icon' src={icon} alt={name}/>
                 <div className='char__info-wrapper'>
                     <div className="char__info-name">{name}</div>
-                    <div className="char__info-vision">
-                        <p>Element: {element}</p>
+                    <div className={`char__info-vision ${clazz}`}>
+                        <p>Element: <span>{element}</span></p>
                     </div>
                     <div className="char__info-nation">
                         <p>Nation: {nation}</p>
@@ -85,7 +99,7 @@ const View = ({char}) => {
             <div className="char__descr">
                 {description}
             </div>
-            <a href="#" className="button">More info</a>      
+            <a href={`/characters/${name}`} className="button">More info</a>      
         </>
     )
 }

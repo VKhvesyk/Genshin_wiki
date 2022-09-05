@@ -1,21 +1,111 @@
 @import '../../style/variables.scss';
 
 .single-char {
+    &__char {
+        display: flex;
+    }
+    &__info {
+        &-icon {
+            margin-right: 25px;
+            height: 200px;
+        }
+        &-name {
+            font-size: 34px;
+            font-weight: 700;
+        }
+        &-vision, &-nation, &-weapon, &-birthday {
+            font-size: 18px;
+            font-weight: 400;
+            p {
+                span {
+                    font-weight: 700;
+                }
+            }
+            &--pyro {
+                p {
+                    span {
+                        color: #ef7a35;
+                    }
+                }
+            }
+            &--hydro {
+                p {
+                    span {
+                        color: #4cc2f1;
+                    }
+                }
+            }
+            &--electro {
+                p {
+                    span {
+                        color: #b161db;
+                    }
+                }
+            }
+            &--cryo {
+                p {
+                    span {
+                        color: #9fd6e3;
+                    }
+                }
+            }
+            &--anemo {
+                p {
+                    span {
+                        color: #74c2a8;
+                    }
+                }
+            }
+            &--geo {
+                p {
+                    span {
+                        color: #fab632;
+                    }
+                }
+            }
+            &--black {
+                p {
+                    span {
+                        color: black;
+                    }
+                }
+            }
+        }
+    }
+    &__wrapper {
+        margin: 25px 0px;
+    }
     &__title {
         margin-top: 20px;
         font-size: 22px;
-        font-weight: 700;
+        font-weight: 400;
+        color: white;
+        position: relative;
+        &::after {
+            content: '';
+            display: block;
+            width: calc(100% + 50px);
+            height: 40px;
+            background-color: $main-color;
+            position: absolute;
+            top: -4px;
+            left: -25px;
+            z-index: -1;
+        }
     }
     &__descr {
         margin-top: 15px;
         font-size: 18px;
+        span {
+            font-weight: 700;
+        }
     }
-    &__ascension-material, &__talant-books {
+    &__common-ascension-materials, &__ascension-materials, &__talant-books, &__talent-materials {
         display: flex;
         justify-content: space-around;
         margin-top: 15px;
     }
-    &__enemy-material, &__gemstone, &__wold-boss-material, &__talent-book {
+    &__enemy-material, &__talent-book, &__talent-material {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -24,7 +114,24 @@
         background-color: $second-color;
         border-radius: 100%;
         img {
-            width: 150px;
+            width: 140px;
+        }
+    }
+    &__talent-book {
+        img {
+            width: 130px;
+        }
+    }
+    &__gemstone-and-boss {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 110px;
+        height: 110px;
+        background-color: $second-color;
+        border-radius: 100%;
+        img {
+            width: 100px;
         }
     }
 }

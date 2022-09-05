@@ -1,4 +1,7 @@
+import { useHttp } from "../hooks/http.hook";
+
 const useGenshinService = () => {
+    const {loading, request, error, clearError} = useHttp();
 
     const getResource = async (url) => {
         let res = await fetch(url);
@@ -11,32 +14,32 @@ const useGenshinService = () => {
     }
 
     const getAllCharacters = async () => {
-        const res = await getResource('https://genshin-app-api.herokuapp.com/api/characters?infoDataSize=all');
+        const res = await request('https://genshin-app-api.herokuapp.com/api/characters?infoDataSize=all');
         return res.payload.characters.map(_transformCharacters)
     }
 
     const getAllWeapons = async () => {
-        const res = await getResource('https://genshin-app-api.herokuapp.com/api/weapons?infoDataSize=minimal');
+        const res = await request('https://genshin-app-api.herokuapp.com/api/weapons?infoDataSize=minimal');
         return res.payload.weapons.map(_transformWeapons)
     }
 
     const getAllEnemies = async () => {
-        const res = await getResource('https://genshin-app-api.herokuapp.com/api/enemies');
+        const res = await request('https://genshin-app-api.herokuapp.com/api/enemies');
         return res.payload.enemies.map(_transformEnemies)
     }
 
     const getCharacter = async (name) => {
-        const res = await getResource(`https://genshin-app-api.herokuapp.com/api/characters/info/${name}?infoDataSize=minimal`);
+        const res = await request(`https://genshin-app-api.herokuapp.com/api/characters/info/${name}?infoDataSize=all`);
         return Object.entries(res.payload).map(_transformCharacter)
     }
 
     const getMaterialsCurrentDay = async (day) => {
-        const res = await getResource(`https://genshin-app-api.herokuapp.com/api/generalinfo/materials/${day}`);
+        const res = await request(`https://genshin-app-api.herokuapp.com/api/generalinfo/materials/${day}`);
         return res.payload.talentBooks.map(_transformMaterialCurrentDay)
     }
 
     const getCurrentEvents = async () => {
-        const res = await getResource(`https://genshin-app-api.herokuapp.com/api/events`);
+        const res = await request(`https://genshin-app-api.herokuapp.com/api/events`);
         // return res
         return Object.entries(res.payload.events)
         // return res.payload.talentBooks.map(_transformCurrentEvents)
@@ -90,7 +93,11 @@ const useGenshinService = () => {
             weapon: char[1].weaponType,
             birthday: char[1].birthday,
             nation: char[1].nation,
-            icon: char[1].iconURL
+            icon: char[1].iconURL,
+            talentBook: char[1].talentBook,
+            talentMaterial: char[1].talentMaterial,
+            commonAscensionMaterials: char[1].commonAscensionMaterials,
+            ascensionMaterials: char[1].ascensionMaterials
         }
     }  
 
@@ -103,7 +110,7 @@ const useGenshinService = () => {
         }
     }
     
-    return {getAllCharacters, getMaterialsCurrentDay, getCharacter, getCurrentEvents, getAllWeapons, getAllEnemies}
+    return {getAllCharacters, getMaterialsCurrentDay, getCharacter, getCurrentEvents, getAllWeapons, getAllEnemies, request, loading, error, clearError}
 }
 
 export default useGenshinService;

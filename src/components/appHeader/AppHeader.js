@@ -34,7 +34,7 @@ const AppHeader = () => {
             <nav className="app__menu">
                 <ul>
                     <li><NavLink 
-                            to="/"
+                            to="/characters"
                             style={({isActive}) => ({color: isActive ? '#3e9f85' : 'inherit'})} 
                             >Characters</NavLink></li>
                     /

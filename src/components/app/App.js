@@ -18,24 +18,14 @@ const App = () => {
             <div className="app">
                 <AppHeader/>
                 <main>
-                    {/* <Routes>
-                    <FarmInfo/>
-                        <div className="char__content">
-                            <Route path="/" element={<MainPage/>}/>
-                            <Route path="" element={<SingleChar/>}/>
-                        </div>
-                        <div className="char__content char__content--weapons">
-                            <Route path="/weapons" element={<WeaponsList/>}/>
-                        </div>
-                        <img className="bg-decoration" src={decoration} alt="Venti"/>
-                    </Routes> */}
                     <FarmInfo/>
                         <div className="char__content">
                             <Routes>
                                 <Route path="/" element={<MainPage/>}/>
-                                {/* <Route path="" element={<SingleChar/>}/> */}
+                                <Route path="/characters" element={<MainPage/>}/>
                                 <Route path="/weapons" element={<WeaponsList/>}/>
                                 <Route path="/enemies" element={<EnemiesList/>}/>
+                                <Route path="/characters/:charId" element={<SingleChar/>}/>
                             </Routes>
                         </div>
                         <img className="bg-decoration" src={decoration} alt="Venti"/>

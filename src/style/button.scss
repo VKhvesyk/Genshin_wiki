@@ -5,7 +5,8 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    margin-top: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     min-width: 110px;
     min-height: 25px;
     color: #fff;
@@ -16,6 +17,7 @@
     background-color: $second-color;
     transition: 0.3s all;
     cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     &:hover {
         color: #fff;
         transform: translateY(-5px);

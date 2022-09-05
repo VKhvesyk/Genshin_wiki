@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import useGenshinService from '../../services/GenshinService';
+import Spinner from '../spinner/Spinner';
 
 import './charList.scss';
 
@@ -11,7 +14,7 @@ const CharList = (props) => {
     const [count, setCount] = useState(0);
     const [charEnded, setCharEnded] = useState(false);
 
-    const {getAllCharacters} = useGenshinService();
+    const {getAllCharacters, loading, error} = useGenshinService();
 
 
     useEffect(() => {
@@ -54,37 +57,46 @@ const CharList = (props) => {
         let items =  arr.map((item, i) => {
             if (i < count) {
                 return (
-                    <li className="char__item"
-                        key={item.id}
-                        ref={el => itemRefs.current[i] = el}
-                        onClick={() => {
-                            props.onCharSelected(item.name);
-                            focusOnItem(i);
-                        }}>
-                        <img src={item.compressedImage} alt={item.name}/>
-                        <div className="char__card-descr">
-                            <p>{item.name}</p>
-                            <p>{item.element}</p>
-                        </div>
-                    </li>
+                    <CSSTransition 
+                        key={item.id} 
+                        timeout={500}
+                        classNames="animation">
+                            <li className="char__item"
+                            key={item.id}
+                            ref={el => itemRefs.current[i] = el}
+                            onClick={() => {
+                                props.onCharSelected(item.name);
+                                focusOnItem(i);
+                            }}>
+                            <img src={item.compressedImage} alt={item.name}/>
+                            <div className="char__card-descr">
+                                <p>{item.name}</p>
+                                <p>{item.element}</p>
+                            </div>
+                        </li>     
+                    </CSSTransition>
                 )
             };
 
         });
 
         return (
-            <ul className="char__grid">
-                {items}
-            </ul>
+            <TransitionGroup component={null}>
+                    {items}
+            </TransitionGroup>
         )
     }
 
     const items = renderItems(charList, count);
+    const spinner = loading ? <Spinner/> : null;
 
 
     return (
         <div className="char__list">
-            {items}
+            <ul className="char__grid">
+                {spinner}
+                {items}
+            </ul>
             <button 
                 className="button"
                 onClick={onRequest}
